@@ -1,0 +1,28 @@
+{
+  "name": "en-garde",
+  "version": "0.0.1",
+  "description": "Functional utilities for helping with async",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/7digital/en-garde.git"
+  },
+  "keywords": [
+    "functional",
+    "utility"
+  ],
+  "author": "7digital",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/7digital/en-garde/issues"
+  },
+  "homepage": "https://github.com/7digital/en-garde",
+  "devDependencies": {
+    "chai": "~1.8.1",
+    "mocha": "~1.17.0",
+    "i-spy": "git+ssh://git@github.com:7digital/i-spy.git"
+  }
+}
