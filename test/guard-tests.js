@@ -57,13 +57,13 @@ describe('guard', function () {
 
 	});
 
-	describe('bubble', function () {
+	describe('propagate', function () {
 
 		it('creates a guarded callback',
 			function () {
 			var successHandler = iSpy.createSpy();
 			var outerCallback = iSpy.createSpy();
-			var cb = guard.bubble(console, successHandler, outerCallback);
+			var cb = guard.propagate(console, successHandler, outerCallback);
 
 			assert.isFunction(cb, 'expected a function');
 			assert(cb.isGuard, 'expected function to be guarded');
@@ -82,7 +82,7 @@ describe('guard', function () {
 			function () {
 			var successHandler = iSpy.createSpy();
 			var outerCallback = iSpy.createSpy();
-			var cb = guard.bubble(console, successHandler, outerCallback);
+			var cb = guard.propagate(console, successHandler, outerCallback);
 
 			assert.isFunction(cb, 'expected a function');
 			assert(cb.isGuard, 'expected function to be guarded');
@@ -99,7 +99,7 @@ describe('guard', function () {
 			var result = { foo: 'bar' };
 			var successHandler = iSpy.createSpy();
 			var outerCallback = iSpy.createSpy();
-			var cb = guard.bubble(console, successHandler, outerCallback);
+			var cb = guard.propagate(console, successHandler, outerCallback);
 
 			cb(null, result);
 			assert(successHandler.wasCalled(),
@@ -110,12 +110,12 @@ describe('guard', function () {
 				'did not expect the outer callback to be called');
 		});
 
-		it('bubbles errors to the outer callback', function () {
+		it('propagates errors to the outer callback', function () {
 			var err = new Error('Oh noes');
 			var successHandler = iSpy.createSpy();
 			var outerCallback = iSpy.createSpy();
 			var log = { error: iSpy.createSpy() };
-			var cb = guard.bubble(log, successHandler, outerCallback);
+			var cb = guard.propagate(log, successHandler, outerCallback);
 
 			cb(err);
 			assert(outerCallback.wasCalled(),
@@ -131,7 +131,7 @@ describe('guard', function () {
 			var successHandler = iSpy.createSpy();
 			var outerCallback = iSpy.createSpy();
 			var log = { error: iSpy.createSpy() };
-			var cb = guard.bubble(log, successHandler, outerCallback);
+			var cb = guard.propagate(log, successHandler, outerCallback);
 
 			cb(err);
 			assert(log.error.wasCalled(), 'expected log.error to be called');
@@ -147,7 +147,7 @@ describe('guard', function () {
 			var successHandler = iSpy.createSpy();
 			var outerCallback = iSpy.createSpy();
 			var log = { error: iSpy.createSpy() };
-			var cb = guard.bubble(log, msg, successHandler, outerCallback);
+			var cb = guard.propagate(log, msg, successHandler, outerCallback);
 
 			cb(err);
 			assert(log.error.wasCalled(), 'expected log.error to be called');
