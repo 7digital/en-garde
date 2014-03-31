@@ -161,4 +161,59 @@ describe('guard', function () {
 
 	});
 
+	describe('logAndIgnoreError', function () {
+		var fakeResults = {
+			foo: 'bar'
+		};
+		var fakeError = new Error('Oh no');
+		var fakeLogger = {
+			error: iSpy.createSpy()
+		};
+
+		beforeEach(function () {
+			fakeLogger.error.reset();
+		});
+
+		function callbackWithResults(cb) {
+			process.nextTick(function () {
+				return cb(null, fakeResults);
+			});
+		}
+
+		function callbackWithError(cb) {
+			process.nextTick(function () {
+				return cb(fakeError);
+			});
+		}
+
+
+		it('propagates results to callback', function (done) {
+			var wrapped = guard.logAndIgnore(fakeLogger,
+				callbackWithResults);
+
+			wrapped(function (err, res) {
+				assert(!err, 'expected no error');
+				assert.strictEqual(fakeResults, res,
+					'expected to be called back with the results');
+				assert(fakeLogger.error.wasNotCalled(),
+					'expected the logger not to be called');
+				done();
+			});
+		});
+
+		it('calls back with no error', function (done) {
+			var wrapped = guard.logAndIgnore(fakeLogger,
+				callbackWithError);
+
+			wrapped(function (err, res) {
+				assert(!err, 'expected no error');
+				assert(!res,'expected to be called back with no results');
+				assert(fakeLogger.error.wasCalled(),
+					'expected the logger to be called');
+				done();
+			});
+
+		});
+
+	});
 });
