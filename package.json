@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Functional utilities for helping with async",
   "main": "index.js",
+  "publishConfig": { "registry": "http://npm-registry.nix.sys.7d:4873/" },
   "scripts": {
     "test": "mocha --recursive -R spec"
   },
