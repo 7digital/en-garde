@@ -211,8 +211,13 @@ describe('guard', function () {
 			wrapped(function (err, res) {
 				assert(!err, 'expected no error');
 				assert(!res,'expected to be called back with no results');
-				assert(fakeLogger.error.wasCalled(),
-					'expected the logger to be called');
+				assert.lengthOf(fakeLogger.error.calls, 1,
+					'expected the logger not to be called');
+				assert.equal(fakeLogger.error.calls[0][0],
+					'Ignoring callback error',
+					'expected default error message');
+				assert.equal(fakeLogger.error.calls[0][1], fakeError,
+					'expected error');
 				done();
 			});
 		});
@@ -227,6 +232,24 @@ describe('guard', function () {
 					'expected to be called back with the input argument');
 				assert(fakeLogger.error.wasNotCalled(),
 					'expected the logger not to be called');
+				done();
+			});
+		});
+
+		it('has an optional error message', function (done) {
+			var msg = 'some error message';
+			var wrapped =
+				guard.logAndIgnore(fakeLogger, msg, callbackWithError);
+
+			wrapped(function (err, res) {
+				assert(!err, 'expected no error');
+				assert(!res,'expected to be called back with no results');
+				assert.lengthOf(fakeLogger.error.calls, 1,
+					'expected the logger not to be called');
+				assert.equal(fakeLogger.error.calls[0][0], msg,
+					'expected custom error message');
+				assert.equal(fakeLogger.error.calls[0][1], fakeError,
+					'expected error');
 				done();
 			});
 		});
