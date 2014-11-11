@@ -186,10 +186,14 @@ describe('guard', function () {
 			});
 		}
 
+		function callbackWithInputArg(someArg, cb) {
+			process.nextTick(function () {
+				return cb(null, someArg);
+			});
+		}
 
 		it('propagates results to callback', function (done) {
-			var wrapped = guard.logAndIgnore(fakeLogger,
-				callbackWithResults);
+			var wrapped = guard.logAndIgnore(fakeLogger, callbackWithResults);
 
 			wrapped(function (err, res) {
 				assert(!err, 'expected no error');
@@ -202,8 +206,7 @@ describe('guard', function () {
 		});
 
 		it('calls back with no error', function (done) {
-			var wrapped = guard.logAndIgnore(fakeLogger,
-				callbackWithError);
+			var wrapped = guard.logAndIgnore(fakeLogger, callbackWithError);
 
 			wrapped(function (err, res) {
 				assert(!err, 'expected no error');
@@ -212,8 +215,20 @@ describe('guard', function () {
 					'expected the logger to be called');
 				done();
 			});
-
 		});
 
+		it('passes all arguments to the wrapped function', function (done) {
+			var wrapped = guard.logAndIgnore(fakeLogger, callbackWithInputArg);
+			var inputArg = 'blah';
+
+			wrapped(inputArg, function (err, res) {
+				assert(!err, 'expected no error');
+				assert.equal(res, inputArg,
+					'expected to be called back with the input argument');
+				assert(fakeLogger.error.wasNotCalled(),
+					'expected the logger not to be called');
+				done();
+			});
+		});
 	});
 });
