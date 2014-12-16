@@ -1,6 +1,6 @@
 {
   "name": "en-garde",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Functional utilities for helping with async",
   "main": "index.js",
   "publishConfig": {
