@@ -167,11 +167,13 @@ describe('guard', function () {
 		};
 		var fakeError = new Error('Oh no');
 		var fakeLogger = {
-			error: iSpy.createSpy()
+			error: iSpy.createSpy(),
+			warn: iSpy.createSpy()
 		};
 
 		beforeEach(function () {
 			fakeLogger.error.reset();
+			fakeLogger.warn.reset();
 		});
 
 		function callbackWithResults(cb) {
@@ -211,12 +213,14 @@ describe('guard', function () {
 			wrapped(function (err, res) {
 				assert(!err, 'expected no error');
 				assert(!res,'expected to be called back with no results');
-				assert.lengthOf(fakeLogger.error.calls, 1,
-					'expected the logger not to be called');
-				assert.equal(fakeLogger.error.calls[0][0],
+				assert.lengthOf(fakeLogger.error.calls, 0,
+					'expected the error logger not to be called');
+				assert.lengthOf(fakeLogger.warn.calls, 1,
+					'expected the warn logger to be called');
+				assert.equal(fakeLogger.warn.calls[0][0],
 					'Ignoring callback error',
 					'expected default error message');
-				assert.equal(fakeLogger.error.calls[0][1], fakeError,
+				assert.equal(fakeLogger.warn.calls[0][1], fakeError,
 					'expected error');
 				done();
 			});
@@ -244,11 +248,13 @@ describe('guard', function () {
 			wrapped(function (err, res) {
 				assert(!err, 'expected no error');
 				assert(!res,'expected to be called back with no results');
-				assert.lengthOf(fakeLogger.error.calls, 1,
-					'expected the logger not to be called');
-				assert.equal(fakeLogger.error.calls[0][0], msg,
+				assert.lengthOf(fakeLogger.error.calls, 0,
+					'expected the error logger not to be called');
+				assert.lengthOf(fakeLogger.warn.calls, 1,
+					'expected the warn logger to be called');
+				assert.equal(fakeLogger.warn.calls[0][0], msg,
 					'expected custom error message');
-				assert.equal(fakeLogger.error.calls[0][1], fakeError,
+				assert.equal(fakeLogger.warn.calls[0][1], fakeError,
 					'expected error');
 				done();
 			});
