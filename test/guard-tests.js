@@ -202,7 +202,9 @@ describe('guard', function () {
 				assert.strictEqual(fakeResults, res,
 					'expected to be called back with the results');
 				assert(fakeLogger.error.wasNotCalled(),
-					'expected the logger not to be called');
+					'expected the error logger not to be called');
+				assert(fakeLogger.warn.wasNotCalled(),
+					'expected the warn logger not to be called');
 				done();
 			});
 		});
@@ -235,7 +237,9 @@ describe('guard', function () {
 				assert.equal(res, inputArg,
 					'expected to be called back with the input argument');
 				assert(fakeLogger.error.wasNotCalled(),
-					'expected the logger not to be called');
+					'expected the error logger not to be called');
+				assert(fakeLogger.warn.wasNotCalled(),
+					'expected the warn logger not to be called');
 				done();
 			});
 		});
