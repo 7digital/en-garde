@@ -27,5 +27,8 @@
     "chai": "~1.8.1",
     "mocha": "~1.17.0",
     "i-spy": "git+http://github.com/7digital/i-spy.git"
+  },
+  "dependencies": {
+    "verror": "^1.6.0"
   }
 }

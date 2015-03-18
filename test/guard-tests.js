@@ -2,6 +2,7 @@
 var assert = require('chai').assert;
 var guard = require('../').guard;
 var iSpy = require('i-spy');
+var VError = require('verror');
 
 describe('guard', function () {
 
@@ -199,7 +200,7 @@ describe('guard', function () {
 
 			wrapped(function (err, res) {
 				assert(!err, 'expected no error');
-				assert.strictEqual(fakeResults, res,
+				assert.strictEqual(res, fakeResults,
 					'expected to be called back with the results');
 				assert(fakeLogger.error.wasNotCalled(),
 					'expected the error logger not to be called');
@@ -219,11 +220,10 @@ describe('guard', function () {
 					'expected the error logger not to be called');
 				assert.lengthOf(fakeLogger.warn.calls, 1,
 					'expected the warn logger to be called');
-				assert.equal(fakeLogger.warn.calls[0][0],
-					'Ignoring callback error',
-					'expected default error message');
-				assert.equal(fakeLogger.warn.calls[0][1], fakeError,
-					'expected error');
+				var err = fakeLogger.warn.calls[0][0];
+				assert.instanceOf(err, VError, 'wrapping error');
+				assert.equal(err.message, 'Ignoring callback error: ' + fakeError.message, 'wrapping error message');
+				assert.equal(err.cause(), fakeError, 'underlying error');
 				done();
 			});
 		});
@@ -256,10 +256,10 @@ describe('guard', function () {
 					'expected the error logger not to be called');
 				assert.lengthOf(fakeLogger.warn.calls, 1,
 					'expected the warn logger to be called');
-				assert.equal(fakeLogger.warn.calls[0][0], msg,
-					'expected custom error message');
-				assert.equal(fakeLogger.warn.calls[0][1], fakeError,
-					'expected error');
+				var err = fakeLogger.warn.calls[0][0];
+				assert.instanceOf(err, VError, 'wrapping error');
+				assert.equal(err.message, 'some error message: ' + fakeError.message, 'wrapping error message');
+				assert.equal(err.cause(), fakeError, 'underlying error');
 				done();
 			});
 		});
